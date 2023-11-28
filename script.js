@@ -17,6 +17,7 @@ function init() {
     render();
 }
 
+
 function render() {
     const gamefield = document.getElementById('gamefield');
     gamefield.innerHTML = '';
@@ -25,13 +26,23 @@ function render() {
         const row = document.createElement('tr');
         for (let j = 0; j < 3; j++) {
             const cell = document.createElement('td');
-            const index = i * 3 + j; //hier wird ausgerechnet in welchem Feld wir sind, um den richtigen Feld zu laden
+            const index = i * 3 + j;
 
-            if (fields[index] === 'Circle') {
-                cell.textContent = 'O';
-            } else if (fields[index] === 'Cross') {
-                cell.textContent = 'X';
-            }else {
+            if (fields[index] === 'circle' || fields[index] === 'cross') {
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("viewBox", "0 0 100 100");
+                svg.setAttribute("width", "100");
+                svg.setAttribute("height", "100");
+
+                const shape = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                shape.setAttribute("d", fields[index] === 'circle' ? "M50,10 A40,40 0 1,0 50,90 A40,40 0 1,0 50,10" : "M20,20 L80,80 M20,80 L80,20");
+                shape.setAttribute("stroke", fields[index] === 'circle' ? "lightcoral" : "yellow");
+                shape.setAttribute("stroke-width", "8");
+                shape.setAttribute("fill", "transparent"); 
+                svg.appendChild(shape);
+
+                cell.appendChild(svg);
+            } else {
                 cell.addEventListener('click', () => clickOnField(index));
             }
 
@@ -46,11 +57,13 @@ function clickOnField(index) {
         fields[index] = currentPlayer;
         render();
         if (checkWinner()) {
-            alert(currentPlayer + ' has won!');
+            alert(currentPlayer === 'cross' ? 'cross' : 'Circle' + ' has won!');
             resetGame();
-            init();
-        }
-        currentPlayer = currentPlayer === 'Cross' ? 'Circle' : 'Cross';
+        }else if (isBoardFull()) {
+            alert('Unentschieden!');
+            resetGame();
+        } 
+        currentPlayer = currentPlayer === 'cross' ? 'circle' : 'cross';
     }
 }
 
@@ -94,4 +107,9 @@ function checkWinner() {
 
 function resetGame() {
     fields = Array(9).fill(null);
+    currentPlayer = 'cross';
+    render();
+}
+function isBoardFull() {
+    return fields.every(field => field !== null);
 }

@@ -25,3 +25,15 @@ body {
   text-align: center;
   font-size: 24px;
 }
+
+#gamefield td:hover {
+    background-color: rgba(0,0,0,0.2);
+}
+
+.cross {
+    color: yellow; /* Knalliges Gelb für das Kreuz */
+}
+
+.circle {
+    color: lightcoral; /* Hellrote Farbe für den Kreis */
+}
