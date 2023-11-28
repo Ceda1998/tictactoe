@@ -14,6 +14,7 @@ let currentPlayer = 'Cross';
 
 
 function init() {
+    resetGame();
     render();
 }
 
